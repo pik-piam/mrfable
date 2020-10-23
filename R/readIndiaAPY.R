@@ -13,7 +13,7 @@
 
 readIndiaAPY <- function(subtype){
   
-  # helper function to convert Wheat data from wide to long format and specify variable and unit
+  # helper function to convert data from wide to long format and specify variable and unit
   .gather <- function(x, varunit, season=FALSE){
     fct<- 1
     if(season) fct<-2
@@ -50,7 +50,10 @@ readIndiaAPY <- function(subtype){
     for (i in 1:length(t(a[, 1]))){
       if(is.na(a[[i, 1]])) a[[i, 1]]<-a[[i-1, 1]]
     }
-    ind<-length(which(grepl("[0-9]",colnames(a))))/3 # find length of each data table
+    if (grepl("1",a[,1])) a <- a[-which(a[, 1]==1),] # remove remaining rows that do not contain data
+    ind <- length(which(grepl("[0-9]", colnames(a)))) / 3 # find length of each data table
+    a <- as.data.frame(a)
+    a[,"season"] <- tolower(a[,"season"])
     out<-rbind(
       .gather(cbind(a[-1,1:2], a[-1,(3+0*ind):(2+1*ind)]), a[[1,0*ind+3]], TRUE),
       .gather(cbind(a[-1,1:2], a[-1,(3+1*ind):(2+2*ind)]), a[[1,1*ind+3]], TRUE),
