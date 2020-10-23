@@ -5,7 +5,7 @@
 #' @importFrom readxl read_excel
 #' @importFrom tidyr gather
 #' @importFrom dplyr filter %>%
-#' @importFrom magclass as.magpie
+#' @importFrom magclass as.magpie getRegions<-
 #' @examples
 #' \dontrun{ a <- readSource(type="IndiaAPY",subtype="Rice") }
 #' @return magpie object containing Area, Yield, or Production data. 

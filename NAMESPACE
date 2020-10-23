@@ -3,6 +3,7 @@
 importFrom(dplyr,"%>%")
 importFrom(dplyr,filter)
 importFrom(madrat,vcat)
+importFrom(magclass,"getRegions<-")
 importFrom(magclass,as.magpie)
 importFrom(readxl,read_excel)
 importFrom(tidyr,gather)
