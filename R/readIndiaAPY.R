@@ -11,7 +11,7 @@
 #' @return magpie object containing Area, Yield, or Production data. 
 
 
-readIndiaAPY <- function(subtype){
+readIndiaAPY <- function(subtype=NA){
   
   # helper function to convert data from wide to long format and specify variable and unit
   .gather <- function(x, varunit, season=FALSE){
@@ -32,6 +32,7 @@ readIndiaAPY <- function(subtype){
     colnames(a)<-sub("-.*","",a[3, ]) # use years as column names
     a <- a[-which(is.na(a[, 1])),] # remove rows that start with NA
     colnames(a)[1] <- "region"
+    if (grepl("1",a[,1])) a <- a[-which(a[, 1]==1),] # remove remaining rows that do not contain data
     ind <- length(which(grepl("[0-9]",colnames(a))))/3 # find length of each data table
     out <- rbind(
       .gather(cbind(a[-1,1], a[-1,(2+0*ind):(1+1*ind)]), a[[1,0*ind+2]]),
@@ -77,9 +78,17 @@ readIndiaAPY <- function(subtype){
     out <- rbind(out, tmp)
   }
   
-  out[["value"]]<-as.numeric(out[["value"]])
+  # Convert data column to numeric
+  out[["value"]] <- as.numeric(out[["value"]])
+  
+  # Remove trailing spaces from variable names
+  out[["variable"]] <- gsub(" $", "", out[["variable"]])
 
-  out <- filter(out,`crop`==subtype) %>% as.magpie()
+  # If applicable, filter out specific crops
+  if (!is.na(subtype)) out <- filter(out,`crop`==subtype)
+  
+  # Convert to magclass
+  out <- as.magpie(out)
   getRegions(out) <- "IND"
 
   return(out)
