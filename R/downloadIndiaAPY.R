@@ -14,7 +14,7 @@ downloadIndiaAPY <- function() {
   for (i in crops) {
     for (j in years) {
       for (k in c(".xls", ".xlsx")) {
-        try(download.file(paste0(url, j, i, k), destfile = paste0(gsub("/|[a-z,A-Z]", "", j), i, k)))
+        suppressWarnings(try(download.file(paste0(url, j, i, k), destfile = paste0(gsub("/|[a-z,A-Z]", "", j), i, k)),silent = T))
       }
     }
   }
