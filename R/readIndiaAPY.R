@@ -67,13 +67,13 @@ readIndiaAPY <- function(subtype=NA){
   excelfiles <- dir()[grep("xls", dir())] # read-in only excel files
   out <- NULL
   for (i in grep("Rice", excelfiles, value = TRUE)) {
-    a <- read_excel(i)
+    suppressMessages(a <- read_excel(i))
     tmp <- cbind("crop" = "Rice", .fixdataRice(a))
     out <- rbind(out, tmp)
   }
 
   for (i in grep("Wheat", excelfiles, value = TRUE)) {
-    a <- read_excel(i)
+    suppressMessages(a <- read_excel(i))
     tmp <- cbind("crop" = "Wheat", .fixdataWheat(a))
     out <- rbind(out, tmp)
   }
