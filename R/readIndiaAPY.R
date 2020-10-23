@@ -31,7 +31,7 @@ readIndiaAPY <- function(subtype=NA){
   .fixdataWheat <- function(a){
     colnames(a)<-sub("-.*","",a[3, ]) # use years as column names
     a <- a[-which(is.na(a[, 1])),] # remove rows that start with NA
-    colnames(a)[1] <- "region"
+    colnames(a)[1] <- "subregion"
     if (grepl("1",a[,1])) a <- a[-which(a[, 1]==1),] # remove remaining rows that do not contain data
     ind <- length(which(grepl("[0-9]",colnames(a))))/3 # find length of each data table
     out <- rbind(
@@ -46,8 +46,8 @@ readIndiaAPY <- function(subtype=NA){
   .fixdataRice <- function(a){
     colnames(a)<-sub("-.*","",a[2,]) # use years as column names
     a<-a[-which(is.na(a[, 2])),] # remove rows that start with NA
-    colnames(a)[1:2]<-c("region", "season")
-    # in the first column, complete the missing region names
+    colnames(a)[1:2]<-c("subregion", "season")
+    # in the first column, complete the missing subregion names
     for (i in 1:length(t(a[, 1]))){
       if(is.na(a[[i, 1]])) a[[i, 1]]<-a[[i-1, 1]]
     }
