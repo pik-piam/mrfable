@@ -1,6 +1,6 @@
 {
   "title": "mrfable: FABLE project data",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "<p>Provides functions to read in FABLE project data.<\/p>",
   "creators": [
     {
