@@ -7,8 +7,8 @@
 #' @importFrom dplyr filter %>%
 #' @importFrom magclass as.magpie getRegions<-
 #' @examples
-#' \dontrun{ a <- readSource(type="IndiaAPY",subtype="Rice") }
-#' @return magpie object containing Area, Yield, or Production data. 
+#' \dontrun{ a <- madrat::readSource(type="IndiaAPY",subtype="Rice",convert=F) }
+#' @return magpie object containing Area, Yield, and Production data. 
 
 
 readIndiaAPY <- function(subtype=NA){
@@ -28,17 +28,26 @@ readIndiaAPY <- function(subtype=NA){
   }
   
   # helper function to prepare data from Wheat excel files for conversion to data.frame
-  .fixdataWheat <- function(a){
+  .fixdataWheat <- function(a,type=1){
     colnames(a)<-sub("-.*","",a[3, ]) # use years as column names
     a <- a[-which(is.na(a[, 1])),] # remove rows that start with NA
     colnames(a)[1] <- "subregion"
     if (grepl("1",a[,1])) a <- a[-which(a[, 1]==1),] # remove remaining rows that do not contain data
+    if (length(grep("State",a[,1]))==2) a <- a[-grep("State",a[,1])[[2]],] # remove remaining rows that do not contain data
     ind <- length(which(grepl("[0-9]",colnames(a))))/3 # find length of each data table
-    out <- rbind(
-      .gather(cbind(a[-1,1], a[-1,(2+0*ind):(1+1*ind)]), a[[1,0*ind+2]]),
-      .gather(cbind(a[-1,1], a[-1,(2+1*ind):(1+2*ind)]), a[[1,1*ind+4]]),
-      .gather(cbind(a[-1,1], a[-1,(2+2*ind):(1+3*ind)]), a[[1,2*ind+4]])
+    if (type == 1) {
+      out <- rbind(
+        .gather(cbind(a[-1,1], a[-1,(2+0*ind):(1+1*ind)]), a[[1,0*ind+2]]),
+        .gather(cbind(a[-1,1], a[-1,(2+1*ind):(1+2*ind)]), a[[1,1*ind+4]]),
+        .gather(cbind(a[-1,1], a[-1,(2+2*ind):(1+3*ind)]), a[[1,2*ind+4]])
       )
+      } else {
+        out <- rbind(
+          .gather(cbind(a[-1,1], a[-1,(2+0*ind):(1+1*ind)]), a[[1,0*ind+2]]),
+          .gather(cbind(a[-1,1], a[-1,(2+1*ind):(1+2*ind)]), a[[1,1*ind+2]]),
+          .gather(cbind(a[-1,1], a[-1,(2+2*ind):(1+3*ind)]), a[[1,2*ind+2]])
+        )
+    }
     return(out)
   }
   
@@ -54,6 +63,7 @@ readIndiaAPY <- function(subtype=NA){
     if (grepl("1",a[,1])) a <- a[-which(a[, 1]==1),] # remove remaining rows that do not contain data
     ind <- length(which(grepl("[0-9]", colnames(a)))) / 3 # find length of each data table
     a <- as.data.frame(a)
+    if (length(grep("State",a[,1]))==2) a <- a[-grep("State",a[,1])[[2]],] # remove remaining rows that do not contain data
     a[,"season"] <- tolower(a[,"season"])
     out<-rbind(
       .gather(cbind(a[-1,1:2], a[-1,(3+0*ind):(2+1*ind)]), a[[1,0*ind+3]], TRUE),
@@ -77,6 +87,26 @@ readIndiaAPY <- function(subtype=NA){
     tmp <- cbind("crop" = "Wheat", .fixdataWheat(a))
     out <- rbind(out, tmp)
   }
+  
+  # Read-in years 1996-2013 for rice
+  suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="rice U"))
+  a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
+  a <- a[-1,]
+  out <- rbind(out, cbind("crop" = "Rice", .fixdataRice(a)))
+  
+  # Read-in years 1996-2013 for wheat
+  suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="Wheat U"))
+  a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
+  a <- a[-1,]
+  out <- rbind(out, cbind("crop" = "Wheat", .fixdataWheat(a)))
+
+  # Read-in years 2014-2018 for rice
+  suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="rice U"))
+  out <- rbind(out, cbind("crop" = "Rice", .fixdataRice(a)))
+  
+  # Read-in years 2014-2018 for wheat
+  suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="Wheat U"))
+  out <- rbind(out, cbind("crop" = "Wheat", .fixdataWheat(a,type=2)))
   
   # Convert data column to numeric
   out[["value"]] <- as.numeric(out[["value"]])
