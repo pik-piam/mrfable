@@ -29,14 +29,16 @@ readIndiaAPY <- function(subtype=NA){
   
   # helper function to prepare data from Wheat excel files for conversion to data.frame
   .fixdataWheat <- function(a,type=1){
-    colnames(a)<-sub("-.*","",a[3, ]) # use years as column names
+    colnames(a)<-sub("-.*","",a[3, ]) # use row with years as column names
     a <- a[-which(is.na(a[, 1])),] # remove rows that start with NA
     colnames(a)[1] <- "subregion"
-    if (grepl("1",a[,1])) a <- a[-which(a[, 1]==1),] # remove remaining rows that do not contain data
-    if (length(grep("State",a[,1]))==2) a <- a[-grep("State",a[,1])[[2]],] # remove remaining rows that do not contain data
-    ind <- length(which(grepl("[0-9]",colnames(a))))/3 # find length of each data table
-    if (type == 1) {
-      out <- rbind(
+    # remove remaining rows that do not contain data
+    if (grepl("1",a[,1])) a <- a[-which(a[, 1]==1),]
+    if (length(grep("State",a[,1]))==2) a <- a[-grep("State",a[,1])[[2]],]
+    # find length of each data table
+    ind <- length(which(grepl("[0-9]",colnames(a))))/3 
+    if (type == 1) { # the type is chosen depending on which position 
+      out <- rbind(  # the names of the variables are shown in the xls file
         .gather(cbind(a[-1,1], a[-1,(2+0*ind):(1+1*ind)]), a[[1,0*ind+2]]),
         .gather(cbind(a[-1,1], a[-1,(2+1*ind):(1+2*ind)]), a[[1,1*ind+4]]),
         .gather(cbind(a[-1,1], a[-1,(2+2*ind):(1+3*ind)]), a[[1,2*ind+4]])
@@ -53,7 +55,7 @@ readIndiaAPY <- function(subtype=NA){
   
   # helper function to prepare data from Rice excel files for conversion to data.frame
   .fixdataRice <- function(a){
-    colnames(a)<-sub("-.*","",a[2,]) # use years as column names
+    colnames(a)<-sub("-.*","",a[2,]) # use row with years as column names
     a<-a[-which(is.na(a[, 2])),] # remove rows that start with NA
     colnames(a)[1:2]<-c("subregion", "season")
     # in the first column, complete the missing subregion names
@@ -63,7 +65,8 @@ readIndiaAPY <- function(subtype=NA){
     if (grepl("1",a[,1])) a <- a[-which(a[, 1]==1),] # remove remaining rows that do not contain data
     ind <- length(which(grepl("[0-9]", colnames(a)))) / 3 # find length of each data table
     a <- as.data.frame(a)
-    if (length(grep("State",a[,1]))==2) a <- a[-grep("State",a[,1])[[2]],] # remove remaining rows that do not contain data
+    # remove remaining rows that do not contain data
+    if (length(grep("State",a[,1]))==2) a <- a[-grep("State",a[,1])[[2]],]
     a[,"season"] <- tolower(a[,"season"])
     out<-rbind(
       .gather(cbind(a[-1,1:2], a[-1,(3+0*ind):(2+1*ind)]), a[[1,0*ind+3]], TRUE),
@@ -88,25 +91,52 @@ readIndiaAPY <- function(subtype=NA){
     out <- rbind(out, tmp)
   }
   
+  for (i in grep("Maize", excelfiles, value = TRUE)) {
+    suppressMessages(a <- read_excel(i))
+    tmp <- cbind("crop" = "Maize", .fixdataRice(a[-1,]))
+    out <- rbind(out, tmp)
+  }
+  
+  
+  
   # Read-in years 1996-2013 for rice
   suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="rice U"))
   a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
   a <- a[-1,]
   out <- rbind(out, cbind("crop" = "Rice", .fixdataRice(a)))
   
+  # Read-in years 2014-2018 for rice
+  suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="rice U"))
+  out <- rbind(out, cbind("crop" = "Rice", .fixdataRice(a)))
+  
+  
+  
+  
+  
   # Read-in years 1996-2013 for wheat
   suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="Wheat U"))
   a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
   a <- a[-1,]
   out <- rbind(out, cbind("crop" = "Wheat", .fixdataWheat(a)))
-
-  # Read-in years 2014-2018 for rice
-  suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="rice U"))
-  out <- rbind(out, cbind("crop" = "Rice", .fixdataRice(a)))
   
   # Read-in years 2014-2018 for wheat
   suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="Wheat U"))
   out <- rbind(out, cbind("crop" = "Wheat", .fixdataWheat(a,type=2)))
+  
+
+  
+  
+  # Read-in years 1996-2013 for Maize
+  suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="Maize  U"))
+  a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
+  a <- a[-c(1:2),]
+  out <- rbind(out, cbind("crop" = "Maize", .fixdataRice(a)))
+  
+  # Read-in years 2014-2018 for Maize
+  suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="Maize  U"))
+  a <- a[-1,]
+  out <- rbind(out, cbind("crop" = "Maize", .fixdataRice(a)))
+  
   
   # Convert data column to numeric
   out[["value"]] <- as.numeric(out[["value"]])
