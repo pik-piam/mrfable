@@ -49,7 +49,8 @@ readIndiaAPY <- function(subtype=NA){
           .gather(cbind(a[-1,1], a[-1,(2+1*ind):(1+2*ind)]), a[[1,1*ind+2]]),
           .gather(cbind(a[-1,1], a[-1,(2+2*ind):(1+3*ind)]), a[[1,2*ind+2]])
         )
-    }
+      }
+    out[,"season"] <- "rabi"
     return(out)
   }
   
