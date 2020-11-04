@@ -2,6 +2,7 @@
 
 importFrom(dplyr,"%>%")
 importFrom(dplyr,filter)
+importFrom(madrat,downloadSource)
 importFrom(madrat,vcat)
 importFrom(magclass,"getNames<-")
 importFrom(magclass,"getRegions<-")

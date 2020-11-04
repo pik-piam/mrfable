@@ -9,7 +9,7 @@
 downloadIndiaAPY <- function() {
 
   url <- "https://eands.dacnet.nic.in/"
-  crops <- c("Rice","Wheat","Maize")
+  crops <- c("Rice","Wheat","Maize","Bajra")
   years <- c("APY_state_data/Apy-1966-76/Foodgrains/","Archive/Year76-86/","10-Year-1985-96/")
   for (i in crops) {
     for (j in years) {
