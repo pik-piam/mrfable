@@ -108,6 +108,14 @@ readIndiaAPY <- function(subtype=NA){
     out <- rbind(out, tmp)
   }
   
+  for (i in grep("Barley", excelfiles, value = TRUE)) {
+    suppressMessages(a <- read_excel(i))
+    tmp <- cbind("crop" = "Barley", .fixdataWheat(a,type = 2))
+    out <- rbind(out, tmp)
+  }
+  
+  
+  
   
   # Read-in years 1996-2013 for rice
   dtfile <- "allfood1996-2013.xls"
@@ -172,6 +180,18 @@ readIndiaAPY <- function(subtype=NA){
   tmp[,"season"] <- "kharif"
   out <- rbind(out, tmp)
 
+
+    # Read-in years 1996-2013 for Barley
+  suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="Barley U"))
+  a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
+  a <- a[-1,]
+  out <- rbind(out, cbind("crop" = "Barley", .fixdataWheat(a,type = 2)))
+  
+  # Read-in years 2014-2018 for Barley
+  suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="Barley U"))
+  tmp <- cbind("crop" = "Barley", .fixdataWheat(a,type=2))
+  tmp[,"season"] <- "rabi"
+  out <- rbind(out, tmp)
   
     
   # Convert data column to numeric
