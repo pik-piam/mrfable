@@ -18,7 +18,7 @@ readIndiaAPY <- function(subtype=NA){
   .gather <- function(x, varunit, season=FALSE){
     fct<- 1
     if(season) fct<-2
-    d <- gather(x, "year", "value", colnames(x)[-(1:fct)], factor_key = T) # convert to long format
+    d <- gather(x, "year", "value", colnames(x)[-(1:fct)], factor_key = TRUE) # convert to long format
 #    d <- d[-c(grep("State", d[,1]), which(is.na(d[,1]))),] # remove irrelevant rows 
     varname <- strsplit(varunit, " \\(")[[1]][[1]] # split variable-unit
     unit <- gsub(" |\\)|\\'", "", strsplit(varunit, " \\(")[[1]][[2]])
@@ -100,88 +100,20 @@ readIndiaAPY <- function(subtype=NA){
   dtfile <- "allfood1996-2013.xls"
   if (!file.exists(dtfile)) downloadSource("IndiaAPY" , overwrite = TRUE)
   for (i in crops) {
-    suppressMessages(a <- read_excel(dtfile,sheet=grep(i,excel_sheets(dtfile),value = TRUE,ignore.case = T)[1]))
-    a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
-    out <- rbind(out,cbind("crop"=i,.fixdata(a)))
+    suppressMessages(a <- read_excel(dtfile, sheet = grep(i, excel_sheets(dtfile), value = TRUE, ignore.case = TRUE)[1]))
+    a[,(grep("State",a)[[2]]-1):length(a[1,])] <- NULL # remove section with 5-year average
+    out <- rbind(out, cbind("crop" = i, .fixdata(a)))
   }
-  out<-as.data.frame(out)
-    # # Read-in years 1996-2013 for rice
-  # dtfile <- "allfood1996-2013.xls"
-  # if (file.exists(dtfile)) {
-  #   suppressMessages(a <- read_excel(dtfile,sheet="rice U"))
-  # } else {
-  #   downloadSource("IndiaAPY" , overwrite = TRUE)
-  #   suppressMessages(a <- read_excel(dtfile,sheet="rice U"))
-  # }
-  # a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
-  # a <- a[-1,]
-  # out <- rbind(out, cbind("crop" = "Rice", .fixdata(a,"R")))
-  # 
-  # # Read-in years 2014-2018 for rice
-  # dtfile <- "allfood2014-2018.xls"
-  # if (file.exists(dtfile)) {
-  #   suppressMessages(a <- read_excel(dtfile,sheet="rice U"))
-  # } else {
-  #   downloadSource("IndiaAPY" , overwrite = TRUE)
-  #   suppressMessages(a <- read_excel(dtfile,sheet="rice U"))
-  # }
-  # out <- rbind(out, cbind("crop" = "Rice", .fixdata(a,"R")))
-  # 
-  # 
-  # 
-  # 
-  # 
-  # # Read-in years 1996-2013 for wheat
-  # suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="Wheat U"))
-  # a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
-  # a <- a[-1,]
-  # out <- rbind(out, cbind("crop" = "Wheat", .fixdata(a,"W")))
-  # 
-  # # Read-in years 2014-2018 for wheat
-  # suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="Wheat U"))
-  # out <- rbind(out, cbind("crop" = "Wheat", .fixdata(a,"W",type2=2)))
-  # 
-  # 
-  # 
-  # 
-  # # Read-in years 1996-2013 for Maize
-  # suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="Maize  U"))
-  # a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
-  # a <- a[-c(1:2),]
-  # out <- rbind(out, cbind("crop" = "Maize", .fixdata(a,"R")))
-  # 
-  # # Read-in years 2014-2018 for Maize
-  # suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="Maize  U"))
-  # a <- a[-1,]
-  # out <- rbind(out, cbind("crop" = "Maize", .fixdata(a,"R")))
-  # 
-  # 
-  # # Read-in years 1996-2013 for Bajra
-  # suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="Bajra U"))
-  # a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
-  # a <- a[-c(1:2),]
-  # out <- rbind(out, cbind("crop" = "Bajra", .fixdata(a,"R")))
-  # 
-  # # Read-in years 2014-2018 for Bajra
-  # suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="Bajra U"))
-  # tmp <- cbind("crop" = "Bajra", .fixdata(a,"W",type2 =2))
-  # tmp[,"season"] <- "kharif"
-  # out <- rbind(out, tmp)
-  # 
-  # 
-  #   # Read-in years 1996-2013 for Barley
-  # suppressMessages(a <- read_excel("allfood1996-2013.xls",sheet="Barley U"))
-  # a[,(grep("State",a)[[2]]-1):length(a[1,])]<-NULL # remove section with 5-year average
-  # a <- a[-1,]
-  # out <- rbind(out, cbind("crop" = "Barley", .fixdata(a,"W",type2 = 2)))
-  # 
-  # # Read-in years 2014-2018 for Barley
-  # suppressMessages(a <- read_excel("allfood2014-2018.xls",sheet="Barley U"))
-  # tmp <- cbind("crop" = "Barley", .fixdata(a,"W",type2=2))
-  # tmp[,"season"] <- "rabi"
-  # out <- rbind(out, tmp)
-  # 
-    
+  
+  dtfile <- "allfood2014-2018.xls"
+  if (!file.exists(dtfile)) downloadSource("IndiaAPY" , overwrite = TRUE)
+  for (i in crops) {
+    suppressMessages(a <- read_excel(dtfile, sheet = grep(i, excel_sheets(dtfile), value = TRUE, ignore.case = TRUE)[1]))
+    out <- rbind(out, cbind("crop" = i, .fixdata(a)))
+  }
+  out <- as.data.frame(out)
+  
+
   # Convert data column to numeric
   out[["value"]] <- as.numeric(out[["value"]])
   
