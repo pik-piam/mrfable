@@ -30,6 +30,7 @@ readIndiaAPY <- function(subtype=NA){
   
   # helper function to prepare data from excel files for conversion to data.frame
   .fixdata <- function(a){
+    # are the data of type R (with seasons in the 2nd column) or type W (without)?
     if (grepl("Summer|Kharif|Rabi",a[,2]))  {
       type1 <- "R"
     } else {
@@ -85,7 +86,6 @@ readIndiaAPY <- function(subtype=NA){
 
   crop <- NULL
   crops <- readLines("crops.txt")
-#  crops <- c("Rice","Barley","Wheat")
   excelfiles <- dir()[grep("xls", dir())] # read-in only excel files
   out <- NULL
   
@@ -104,7 +104,7 @@ readIndiaAPY <- function(subtype=NA){
     a[,(grep("State",a)[[2]]-1):length(a[1,])] <- NULL # remove section with 5-year average
     out <- rbind(out, cbind("crop" = i, .fixdata(a)))
   }
-  
+
   dtfile <- "allfood2014-2018.xls"
   if (!file.exists(dtfile)) downloadSource("IndiaAPY" , overwrite = TRUE)
   for (i in crops) {
@@ -115,7 +115,7 @@ readIndiaAPY <- function(subtype=NA){
   
 
   # Convert data column to numeric
-  out[["value"]] <- as.numeric(out[["value"]])
+  suppressWarnings(out[["value"]] <- as.numeric(out[["value"]]))
   
   # Remove trailing spaces from variable names
   out[["variable"]] <- gsub(" $", "", out[["variable"]])
