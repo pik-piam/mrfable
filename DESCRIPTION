@@ -1,8 +1,8 @@
 Package: mrfable
 Type: Package
 Title: FABLE project data
-Version: 1.0.1
-Date: 2020-11-06
+Version: 1.0.2
+Date: 2020-11-09
 Authors@R: c(person("Anastasis", "Giannousakis", email = "giannou@pik-potsdam.de", role = c("aut","cre")))
 Description: Provides functions to read in FABLE project data.
 Depends:

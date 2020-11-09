@@ -85,7 +85,12 @@ readIndiaAPY <- function(subtype=NA){
   
 
   crop <- NULL
-  crops <- readLines("crops.txt")
+  if (file.exists("crops.txt")) {
+    crops <- readLines("crops.txt")
+  } else {
+    downloadSource("IndiaAPY" , overwrite = TRUE)
+    crops <- readLines("crops.txt")
+  }  
   excelfiles <- dir()[grep("xls", dir())] # read-in only excel files
   out <- NULL
   
