@@ -16,6 +16,8 @@ correctIndiaAPY <- function(x){
   getNames(x)<-sub("UttaraKhand","Uttarakhand",getNames(x))
   
   getNames(x)<-sub("summer/rabi","rabi/summer",getNames(x)) 
+  getNames(x)<-sub("kharif total","total kharif",getNames(x))
+  getNames(x)<-sub("NA$","total",getNames(x))
   
       
      
