@@ -8,7 +8,7 @@
 #' @importFrom magclass as.magpie getRegions<-
 #' @importFrom madrat downloadSource
 #' @examples
-#' \dontrun{ a <- madrat::readSource(type="IndiaAPY",subtype="Rice",convert=F) }
+#' \dontrun{ a <- madrat::readSource(type="IndiaAPY",subtype="Rice",convert="onlycorrect") }
 #' @return magpie object containing Area, Yield, and Production data. 
 
 
@@ -42,7 +42,7 @@ readIndiaAPY <- function(subtype=NA){
       if (!grepl(".*.[0-9]-[0-9].*.",a[3,3])) a <- a[-1,]
       colnames(a)<-sub("-.*","",a[3, ]) # use row with years as column names
       a <- a[-which(is.na(a[, 1])),]
-      colnames(a)[1] <- "subregion"
+      colnames(a)[1] <- "state"
       # remove remaining rows that do not contain data
       if (grepl("1",a[,1])) a <- a[-which(a[, 1]==1),]
       if (length(grep("State",a[,1]))==2) a <- a[-grep("State",a[,1])[[2]],]
@@ -51,7 +51,7 @@ readIndiaAPY <- function(subtype=NA){
       if (!grepl(".*.[0-9]-[0-9].*.",a[2,3])) a <- a[-1,]
       colnames(a)<-sub("-.*","",a[2,]) # use row with years as column names
       a<-a[-intersect(which(is.na(a[,2])),which(is.na(a[,1]))),]
-      colnames(a)[1:2]<-c("subregion", "season")
+      colnames(a)[1:2]<-c("state", "season")
       for (i in 1:length(t(a[, 1]))){
         if(is.na(a[[i, 1]])) a[[i, 1]]<-a[[i-1, 1]]
       }
@@ -128,10 +128,6 @@ readIndiaAPY <- function(subtype=NA){
   # If applicable, filter out specific crops
   if (!is.na(subtype)) out <- filter(out,`crop`==subtype)
   
-  # Convert to magclass
-  out <- as.magpie(out)
-  getRegions(out) <- "IND"
-
-  return(out)
+  return(as.magpie(out,spatial="state"))
 
 }
