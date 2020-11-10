@@ -9,11 +9,11 @@
 #'   readSource("IndiaAPY", convert="onlycorrect")
 #' }
 #' 
-#' @importFrom magclass getNames<- getNames 
+#' @importFrom magclass getNames<- getNames getCells getCells<-
 
 correctIndiaAPY <- function(x){
-  getNames(x)<-sub("Chattisgarh|Chhatisgarh","Chhattisgarh",getNames(x))
-  getNames(x)<-sub("UttaraKhand","Uttarakhand",getNames(x))
+  getCells(x)<-sub("Chattisgarh|Chhatisgarh","Chhattisgarh",getCells(x))
+  getCells(x)<-sub("UttaraKhand","Uttarakhand",getCells(x))
   
   getNames(x)<-sub("summer/rabi","rabi/summer",getNames(x)) 
   getNames(x)<-sub("kharif total","total kharif",getNames(x))

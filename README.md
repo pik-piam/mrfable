@@ -1,6 +1,6 @@
 # FABLE project data
 
-R package **mrfable**, version **1.0.4**
+R package **mrfable**, version **1.0.5**
 
   
 
@@ -38,7 +38,7 @@ In case of questions / problems please contact Anastasis Giannousakis <giannou@p
 
 To cite package **mrfable** in publications use:
 
-Giannousakis A (2020). _mrfable: FABLE project data_. R package version 1.0.4.
+Giannousakis A (2020). _mrfable: FABLE project data_. R package version 1.0.5.
 
 A BibTeX entry for LaTeX users is
 
@@ -47,7 +47,7 @@ A BibTeX entry for LaTeX users is
   title = {mrfable: FABLE project data},
   author = {Anastasis Giannousakis},
   year = {2020},
-  note = {R package version 1.0.4},
+  note = {R package version 1.0.5},
 }
 ```
 
