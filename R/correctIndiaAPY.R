@@ -9,17 +9,32 @@
 #'   readSource("IndiaAPY", convert="onlycorrect")
 #' }
 #' 
-#' @importFrom magclass getNames<- getNames getCells getCells<-
+#' @importFrom magclass as.magpie as.data.frame getCells getCells<-
+#' @importFrom dplyr  %>% select
 
 correctIndiaAPY <- function(x){
-  getCells(x)<-sub("Chattisgarh|Chhatisgarh","Chhattisgarh",getCells(x))
-  getCells(x)<-sub("UttaraKhand","Uttarakhand",getCells(x))
+
+  x <- as.data.frame(x) %>% select(-"Cell")
+  x <- x[which(!is.na(x[, "Value"])),]
   
-  getNames(x)<-sub("summer/rabi","rabi/summer",getNames(x)) 
-  getNames(x)<-sub("kharif total","total kharif",getNames(x))
-  getNames(x)<-sub("NA$","total",getNames(x))
+  x[,"Region"] <- sub("Chattisgarh|Chhatisgarh", "Chhattisgarh", x[,"Region"])
+  x[,"Region"] <- sub("UttaraKhand", "Uttarakhand", x[,"Region"])
+  x[,"Region"] <- sub("Dadra Nagar Haveli", "D & N Haveli", x[,"Region"])
+  x[,"Region"] <- sub("Panjab", "Punjab", x[,"Region"])
+  x[,"Region"] <- sub("Pondicherry", "Puducherry", x[,"Region"])
+  x[,"Region"] <- sub("A & N Islands", "Andaman and Nicobar Islands", x[,"Region"])
+  x[,"Data4"] <- sub("NA", "total", x[,"Data4"])
+  x[,"Data4"] <- sub("kharif total", "total kharif", x[,"Data4"])
+  x[,"Data4"] <- sub("summer/rabi", "rabi/summer", x[,"Data4"])
   
-      
-     
+  colnames(x)<-c("state", "year", "crop", "variable", "unit", "season", "Value")
+  
+  x <- as.magpie(x, spatial="state")
+  
+  x["D & N Haveli",,] <- x["D & N Haveli",,] + x["Daman & Diu",,]
+  
+  getCells(x) <- sub("D & N Haveli", "Dadra and Nagar Haveli and Daman and Diu", getCells(x))
+  x <- x["Daman & Diu", , invert=T]
+  
   return(x)
 }
