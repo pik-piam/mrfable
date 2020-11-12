@@ -1,8 +1,8 @@
 Package: mrfable
 Type: Package
 Title: FABLE project data
-Version: 1.1.0
-Date: 2020-11-11
+Version: 1.2.0
+Date: 2020-11-12
 Authors@R: c(person("Anastasis", "Giannousakis", email = "giannou@pik-potsdam.de", role = c("aut","cre")))
 Description: Provides functions to read in FABLE project data.
 Depends:
@@ -13,7 +13,8 @@ Imports:
     tidyr,
     readxl,
     magclass,
-    quitte
+    quitte,
+    utils
 License: LGPL-3 | file LICENSE
 LazyData: yes
 Encoding: UTF-8
