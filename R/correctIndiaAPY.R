@@ -22,6 +22,7 @@ correctIndiaAPY <- function(x){
   x[,"Region"] <- sub("Dadra Nagar Haveli", "D & N Haveli", x[,"Region"])
   x[,"Region"] <- sub("Panjab", "Punjab", x[,"Region"])
   x[,"Region"] <- sub("Pondicherry", "Puducherry", x[,"Region"])
+  x[,"Region"] <- sub("Orissa", "Odisha", x[,"Region"])
   x[,"Region"] <- sub("A & N Islands", "Andaman and Nicobar Islands", x[,"Region"])
   x[,"Data4"] <- sub("NA", "total", x[,"Data4"])
   x[,"Data4"] <- sub("kharif total", "total kharif", x[,"Data4"])
