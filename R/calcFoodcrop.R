@@ -2,9 +2,8 @@
 #' Calculates foodcrops data for India taken from here: https://eands.dacnet.nic.in/APY_96_To_07.htm
 #' @author Anastasis Giannousakis
 #' @param subtype Area, Yield, or Production
-#' @importFrom madrat readSource toolAggregate
+#' @importFrom madrat readSource
 #' @importFrom magclass getNames
-#' @importFrom utils read.csv
 #' @examples
 #' \dontrun{ a <- madrat::calcOutput("Foodcrop",subtype="Area") }
 #' @return magpie object containing Area, Yield, and Production data. 
