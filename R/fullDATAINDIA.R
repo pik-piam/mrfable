@@ -3,14 +3,16 @@
 #' @author Anastasis Giannousakis
 #' @importFrom madrat calcOutput setConfig
 #' @examples
-#' \dontrun{ a <- madrat::fullDATAINDIA() }
+#' \dontrun{ a <- retrieveData("DATAINDIA) }
 #' @return Foodcrop India data 
 
 
 fullDATAINDIA <- function(){
   
   setConfig(extramappings = "mappingIndiaAPY.csv")
+  crops <- readLines(paste0(getConfig("sourcefolder") ,"/IndiaAPY/crops.txt"))
 
-  calcOutput("Foodcrop", subtype = "Rice", aggregate = "Country", file = "test.mz")
+  for (i in crops)   calcOutput("Foodcrop", subtype = i, aggregate = "Country", file = paste0(i,".mz"))
 
+  
 }
