@@ -1,9 +1,9 @@
 #' @title fullDATAINDIA
 #' Calculates foodcrops data for India taken from here: https://eands.dacnet.nic.in/APY_96_To_07.htm
 #' @author Anastasis Giannousakis
-#' @importFrom madrat calcOutput setConfig
+#' @importFrom madrat calcOutput setConfig getConfig
 #' @examples
-#' \dontrun{ a <- retrieveData("DATAINDIA) }
+#' \dontrun{ a <- retrieveData("DATAINDIA") }
 #' @return Foodcrop India data 
 
 

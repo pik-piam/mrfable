@@ -9,7 +9,9 @@
 #'   readSource("IndiaAPY", convert="onlycorrect")
 #' }
 #' 
-#' @importFrom magclass as.magpie as.data.frame getCells getCells<-
+#' @importFrom magclass as.magpie as.data.frame getCells getCells<- dimSums
+#' @importFrom utils read.csv
+#' @importFrom madrat toolCountryFill
 #' @importFrom dplyr  %>% select
 
 correctIndiaAPY <- function(x){
