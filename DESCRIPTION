@@ -7,7 +7,7 @@ Authors@R: c(person("Anastasis", "Giannousakis", email = "giannou@pik-potsdam.de
 Description: Provides functions to read in FABLE project data.
 Depends:
     R(>= 2.10.0),
-    madrat(>= 1.30)
+    madrat(>= 1.84)
 Imports:
     dplyr,
     tidyr,

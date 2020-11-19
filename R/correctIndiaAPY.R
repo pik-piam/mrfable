@@ -32,10 +32,14 @@ correctIndiaAPY <- function(x){
   
   x <- as.magpie(x, spatial="state")
   
+  diff <- dimSums(dimSums(x["All India",,invert=T],dim = "year",na.rm = T),dim="state",na.rm=T)-
+          dimSums(x["All India",,],dim = "year",na.rm = T)
+  
   x["D & N Haveli",,] <- x["D & N Haveli",,] + x["Daman & Diu",,]
   
   getCells(x) <- sub("D & N Haveli", "Dadra and Nagar Haveli and Daman and Diu", getCells(x))
-  x <- x["Daman & Diu", , invert=T]
-  
+  mapping <- read.csv(system.file("extdata", "regional/mappingIndiaAPY.csv", package = "mrfable"))
+  x<-toolCountryFill(x,countrylist = as.vector(mapping[,"State"]),no_remove_warning = c("All India","Daman & Diu"))
+
   return(x)
 }
