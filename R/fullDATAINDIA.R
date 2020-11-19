@@ -9,13 +9,8 @@
 
 fullDATAINDIA <- function(){
   
-  setConfig(extramappings = system.file("extdata", "mappingIndiaAPY.csv", package = "mrfable"))
-  
-#  x <- toolAggregate(x["All India",,invert=TRUE], mapping, from = 1)
+  setConfig(extramappings = "mappingIndiaAPY.csv")
 
-  calcOutput("Foodcrop", subtype = "Rice", file = "test.mz", aggregate = "State")
-  calcOutput("Foodcrop", subtype = "Rice", file = "test.mz")
-  
-  
-  
+  calcOutput("Foodcrop", subtype = "Rice", aggregate = "Country", file = "test.mz")
+
 }
