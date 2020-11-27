@@ -1,5 +1,5 @@
 #' @title readIndiaAPY
-#' Contains foodcrops data for India taken from here: https://eands.dacnet.nic.in/APY_96_To_07.htm
+#' This function reads foodcrops data for India taken from here: https://eands.dacnet.nic.in/APY_96_To_07.htm
 #' @author Anastasis Giannousakis
 #' @param subtype Area, Yield, or Production
 #' @importFrom readxl read_excel excel_sheets
