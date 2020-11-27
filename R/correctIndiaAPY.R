@@ -9,7 +9,7 @@
 #'   readSource("IndiaAPY", convert="onlycorrect")
 #' }
 #' 
-#' @importFrom magclass as.magpie as.data.frame getCells getCells<- dimSums
+#' @importFrom magclass as.magpie as.data.frame getCells getCells<- dimSums mbind
 #' @importFrom utils read.csv
 #' @importFrom madrat toolCountryFill
 #' @importFrom dplyr  %>% select
