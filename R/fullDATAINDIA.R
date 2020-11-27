@@ -10,9 +10,11 @@
 fullDATAINDIA <- function(){
   
   setConfig(extramappings = "mappingIndiaAPY.csv")
-  crops <- readLines(paste0(getConfig("sourcefolder") ,"/IndiaAPY/crops.txt"))
 
-  for (i in crops)   calcOutput("Foodcrop", subtype = i, aggregate = "Country", file = paste0(i,".mz"))
-
+  for (i in c("Area","Production","Yield")) calcOutput("Foodcrop",
+                                                       subtype = i, 
+                                                       aggregate = "Country",
+                                                       file = paste0(i,".mz"))
+  
   
 }
