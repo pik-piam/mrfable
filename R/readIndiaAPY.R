@@ -38,7 +38,15 @@ readIndiaAPY <- function(subtype=NA){
     }
     
     if (type1 == "W") {
-#      season <- grep("Estimates",a[1])
+      if (any(grepl("Kharif|Winter|Autumn|Rabi|Summer",names(a)))) {
+        season<-tolower(strsplit(
+          strsplit(
+            grep("Kharif|Winter|Autumn|Rabi|Summer",names(a),value = TRUE),
+            split="\\(")[[1]][2],
+          split="\\)")[[1]][1])
+      } else {
+        season <- NA
+      }
       if (!grepl(".*.[0-9]-[0-9].*.",a[3,3])) a <- a[-1,]
       colnames(a)<-sub("-.*","",a[3, ]) # use row with years as column names
       a <- a[-which(is.na(a[, 1])),]
@@ -68,16 +76,14 @@ readIndiaAPY <- function(subtype=NA){
       if (any(grepl("Autumn",a[,1]))) a <- a[-which(is.na(a[, 2])), ]
       out<-rbind(
         .gather(cbind(a[-1,1:2], a[-1,(3+0*ind):(2+1*ind)]), "Area ( 000 Hektares)", TRUE),
-        .gather(cbind(a[-1,1:2], a[-1,(3+1*ind):(2+2*ind)]), "Production ( 000 Tonnes)", TRUE),
-        .gather(cbind(a[-1,1:2], a[-1,(3+2*ind):(2+3*ind)]), "Yield (Kg./Hectare)", TRUE)
+        .gather(cbind(a[-1,1:2], a[-1,(3+1*ind):(2+2*ind)]), "Production ( 000 Tonnes)", TRUE)
       )
     } else {
         out <- rbind(  
           .gather(cbind(a[-1,1], a[-1,(2+0*ind):(1+1*ind)]), "Area ( 000 Hektares)"),
-          .gather(cbind(a[-1,1], a[-1,(2+1*ind):(1+2*ind)]), "Production ( 000 Tonnes)"),
-          .gather(cbind(a[-1,1], a[-1,(2+2*ind):(1+3*ind)]), "Yield (Kg./Hectare)")
+          .gather(cbind(a[-1,1], a[-1,(2+1*ind):(1+2*ind)]), "Production ( 000 Tonnes)")
         )
-      out[,"season"] <- NA
+      out[,"season"] <- season
     }
     return(out)
 
@@ -121,13 +127,13 @@ readIndiaAPY <- function(subtype=NA){
 
   # Convert data column to numeric
   suppressWarnings(out[["value"]] <- as.numeric(out[["value"]]))
-  
-  # Remove trailing spaces from variable names
-  out[["variable"]] <- gsub(" $", "", out[["variable"]])
 
   # If applicable, filter out specific crops
   if (!is.na(subtype)) out <- filter(out,`crop`==subtype)
   
-  return(as.magpie(out,spatial="state"))
+  out <- as.magpie(out, spatial="state")
+  
+
+  return(out)
 
 }
