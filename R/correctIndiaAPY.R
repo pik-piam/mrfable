@@ -12,27 +12,21 @@
 #' @importFrom magclass as.magpie as.data.frame getCells getCells<- dimSums mbind getNames<-
 #' @importFrom utils read.csv
 #' @importFrom madrat toolCountryFill
-#' @importFrom dplyr  %>% select
+#' @importFrom dplyr  %>% select anti_join filter mutate ungroup group_by summarise bind_rows distinct
 
 correctIndiaAPY <- function(x){
   
-  # if for a croptype a season has been found and the rest are NA, use this one for all years and regions
-  # for (i in getItems(x,split = TRUE)[[3]][["crop"]]) {
-  #   if ("NA" %in% getItems(x[,,i],split = TRUE)[[3]][["season"]] & length(getItems(x[,,i],split = TRUE)[[3]][["season"]])==2) {
-  #     season <- grep("NA",getItems(x[,,i],split = TRUE)[[3]][["season"]],invert = TRUE,value = TRUE)
-  #     if (all(getItems(x[,1966:2013,i],split = TRUE)[[3]][["season"]]=="NA")) {
-  #       x[,1966:2013,i][,,season]<-setNames(mselect(x,crop=i,year=paste0("y",c(1966:2013)),season="NA"),getNames(x[,1966:2013,i][,,season]))
-  #       x <- mbind(x[,,i,invert=TRUE],x[,,i][,,season])
-  #     }
-  #   }
-  # }
+  .rmvdplseas <- function(xx,seas1,seas2) {
+    tmp<-select(filter(xx,`season`%in%c(seas1,seas2)),-"season")
+    tmp<-tmp[which(duplicated(tmp)),]
+    if (nrow(tmp)>0) xx <- anti_join(xx,mutate(tmp,"season"=seas2),
+        by = c("state", "year", "crop", "variable", "unit", "season", "Value"))
+    return(xx)
+  }
 
   x <- as.data.frame(x) %>% select(-"Cell")
   x <- x[which(!is.na(x[, "Value"])),]
-  
-  # Remove one trailing space from variable names
-#  x[,"Data2"] <- gsub(" $", "", x[,"Data2"])
-  
+
   x[,"Region"] <- sub("Chattisgarh|Chhatisgarh", "Chhattisgarh", x[,"Region"])
   x[,"Region"] <- sub("UttaraKhand", "Uttarakhand", x[,"Region"])
   x[,"Region"] <- sub("Dadra Nagar Haveli", "D & N Haveli", x[,"Region"])
@@ -42,40 +36,55 @@ correctIndiaAPY <- function(x){
   x[,"Region"] <- sub("A & N Islands", "Andaman and Nicobar Islands", x[,"Region"])
   x[,"Data4"] <- sub("NA", "total", x[,"Data4"])
   x[,"Data4"] <- sub("total kharif", "kharif total", x[,"Data4"])
-  x[,"Data4"] <- sub("kharif \\(autumn\\)", "autumn", x[,"Data4"])
-  x[,"Data4"] <- sub("kharif \\(winter\\)", "winter", x[,"Data4"])
+  x[,"Data4"] <- sub("/^kharif/", "kharif total", x[,"Data4"])
+  x[,"Data4"] <- sub("kharif \\(autumn\\)", "kharif total", x[,"Data4"])
+  x[,"Data4"] <- sub("kharif \\(winter\\)", "kharif total", x[,"Data4"])
   x[,"Data4"] <- sub("summer/rabi", "rabi/summer", x[,"Data4"])
   
   colnames(x)<-c("state", "year", "crop", "variable", "unit", "season", "Value")
   
   season <- NULL
   x <- filter(x,season!="total rabi/ summer")
-  # for (i in unique(x[,"state"])) {
-  #   # find rows of x$state that are duplicated
-  #   tmp1 <- filter(x,state==i) %>% duplicated() %>% which()
-  #   tmp <- filter(x,state==i)
-  #   print(tmp1[tmp,])
-  # }
+  
+  # remove mistakes in excel files leading to double counting (e.g. Rice,2015,Jharkhand)
+  x <- .rmvdplseas(x,"autumn","kharif")
+  x <- .rmvdplseas(x,"winter","kharif")
+  
+  # add "kharif total" only where it is missing. 
+  # (because some regions/years/crops have it as a new data point
+  # whereas most of them calculate it in the excel files)
+  x %>% filter(season%in%c("kharif","autumn","winter")) %>% 
+    group_by(`season`,state,crop,year,variable,unit) %>% 
+    summarise("Value"=sum(Value,na.rm = TRUE)) %>% 
+    mutate(season="kharif total") %>% 
+    ungroup()-> tmp
+  tmp1 <- bind_rows(filter(x,season=="kharif total"),tmp)
+  tmp1 %>% distinct() %>%  distinct(state,year,crop,unit,season,.keep_all = T) -> tmp
+  x <- bind_rows(tmp,filter(x,season!="kharif total"))
+  
+  # add "total" where it is missing
+  x %>% filter(!season%in%c("kharif total","total")) %>% 
+    group_by(`season`,state,crop,year,variable,unit) %>% 
+    summarise("Value"=sum(Value,na.rm = TRUE)) %>% 
+    mutate(season="total") %>% 
+    ungroup()-> tmp
+  tmp1 <- bind_rows(filter(x,season=="total"),tmp)
+  tmp1 %>% distinct() %>%  distinct(state,year,crop,unit,season,.keep_all = T) -> tmp
+  x <- bind_rows(tmp,filter(x,season!="total"))
+  
+  # add "total" if there is only "kharif total" as season
+  x %>% filter(season%in%c("kharif total")) -> tmp
+  tmp[,"season"] <- "total"
+  tmp1 <- bind_rows(x,tmp)
+  tmp1 %>% distinct() %>%  distinct(state,year,crop,unit,season,.keep_all = T) -> x
 
   x <- as.magpie(x, spatial="state")
-  
-#  diff <- dimSums(dimSums(x["All India",,invert=T],dim = "year",na.rm = T),dim="state",na.rm=T)-
-#          dimSums(x["All India",,],dim = "year",na.rm = T)
+
   x["D & N Haveli",,] <- dimSums(x[c("D & N Haveli","Daman & Diu"),,],dim = 1,na.rm = TRUE)
-  #  tmp <- x["All India",,]
+
   getCells(x) <- sub("D & N Haveli", "Dadra and Nagar Haveli and Daman and Diu", getCells(x))
   mapping <- read.csv(system.file("extdata", "regional/mappingIndiaAPY.csv", package = "mrfable"))
   x<-toolCountryFill(x,countrylist = as.vector(mapping[,"state"]),no_remove_warning = c("All India","Daman & Diu"))
-#  x <- mbind(tmp,x)
-
-  # add total value where it is missing
-  getNames(x)<-sub("NA$","total",getNames(x))
-
-  tmp <- dimSums(x[,,c("winter","autumn","kharif")],dim = "season",na.rm = TRUE)
-  x[,,"kharif total"][is.na(x[,,"kharif total"])] <- tmp[is.na(x[,,"kharif total"])]
-
-  tmp <- dimSums(x[,,c("total","kharif total"),invert=TRUE],dim = "season",na.rm = TRUE)
-  x[,,"total"][is.na(x[,,"total"])] <- tmp[is.na(x[,,"total"])]
 
   return(x)
 }
