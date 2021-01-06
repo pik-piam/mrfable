@@ -1,10 +1,13 @@
 #' downloadIndiaAPY
 #'
-#' Function to download data from https://eands.dacnet.nic.in/APY_96_To_07.htm
+#' Function to download data from https://eands.dacnet.nic.in/APY_96_To_07.htm.
+#' Best used in combination with the madrat package.
 #' 
 #' @importFrom utils download.file
 #' 
 #' @author Anastasis Giannousakis
+#' @examples
+#' \dontrun{ madrat::downloadSource(type="IndiaAPY") }
 
 downloadIndiaAPY <- function() {
 
