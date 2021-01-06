@@ -17,7 +17,7 @@
 correctIndiaAPY <- function(x){
   
   .rmvdplseas <- function(xx,seas1,seas2) {
-    tmp<-select(filter(xx,`season`%in%c(seas1,seas2)),-"season")
+    tmp<-select(filter(xx,season%in%c(seas1,seas2)),-"season")
     tmp<-tmp[which(duplicated(tmp)),]
     if (nrow(tmp)>0) xx <- anti_join(xx,mutate(tmp,"season"=seas2),
         by = c("state", "year", "crop", "variable", "unit", "season", "Value"))
@@ -43,7 +43,7 @@ correctIndiaAPY <- function(x){
   
   colnames(x)<-c("state", "year", "crop", "variable", "unit", "season", "Value")
   
-  season <- NULL
+  season <- state <- variable <- crop <- year <- Value <- NULL
   x <- filter(x,season!="total rabi/ summer")
   
   # remove mistakes in excel files leading to double counting (e.g. Rice,2015,Jharkhand)
@@ -54,29 +54,29 @@ correctIndiaAPY <- function(x){
   # (because some regions/years/crops have it as a new data point
   # whereas most of them calculate it in the excel files)
   x %>% filter(season%in%c("kharif","autumn","winter")) %>% 
-    group_by(`season`,state,crop,year,variable,unit) %>% 
+    group_by(`season`,`state`,`crop`,`year`,`variable`,`unit`) %>% 
     summarise("Value"=sum(Value,na.rm = TRUE)) %>% 
     mutate(season="kharif total") %>% 
     ungroup()-> tmp
   tmp1 <- bind_rows(filter(x,season=="kharif total"),tmp)
-  tmp1 %>% distinct() %>%  distinct(state,year,crop,unit,season,.keep_all = T) -> tmp
+  tmp1 %>% distinct() %>%  distinct(`state`,`year`,`crop`,`unit`,`season`,.keep_all = T) -> tmp
   x <- bind_rows(tmp,filter(x,season!="kharif total"))
   
   # add "total" where it is missing
   x %>% filter(!season%in%c("kharif total","total")) %>% 
-    group_by(`season`,state,crop,year,variable,unit) %>% 
-    summarise("Value"=sum(Value,na.rm = TRUE)) %>% 
+    group_by(`season`,`state`,`crop`,`year`,`variable`,`unit`) %>% 
+    summarise("Value"=sum(`Value`,na.rm = TRUE)) %>% 
     mutate(season="total") %>% 
     ungroup()-> tmp
   tmp1 <- bind_rows(filter(x,season=="total"),tmp)
-  tmp1 %>% distinct() %>%  distinct(state,year,crop,unit,season,.keep_all = T) -> tmp
+  tmp1 %>% distinct() %>%  distinct(`state`,`year`,`crop`,`unit`,`season`,.keep_all = T) -> tmp
   x <- bind_rows(tmp,filter(x,season!="total"))
   
   # add "total" if there is only "kharif total" as season
   x %>% filter(season%in%c("kharif total")) -> tmp
   tmp[,"season"] <- "total"
   tmp1 <- bind_rows(x,tmp)
-  tmp1 %>% distinct() %>%  distinct(state,year,crop,unit,season,.keep_all = T) -> x
+  tmp1 %>% distinct() %>%  distinct(`state`,`year`,`crop`,`unit`,`season`,.keep_all = T) -> x
 
   x <- as.magpie(x, spatial="state")
 
@@ -85,6 +85,8 @@ correctIndiaAPY <- function(x){
   getCells(x) <- sub("D & N Haveli", "Dadra and Nagar Haveli and Daman and Diu", getCells(x))
   mapping <- read.csv(system.file("extdata", "regional/mappingIndiaAPY.csv", package = "mrfable"))
   x<-toolCountryFill(x,countrylist = as.vector(mapping[,"state"]),no_remove_warning = c("All India","Daman & Diu"))
+  
+  getNames(x) <- sub("kHektares","kHectares",getNames(x))
 
   return(x)
 }

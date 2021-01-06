@@ -11,10 +11,15 @@ fullDATAINDIA <- function(){
   
   setConfig(extramappings = "mappingIndiaAPY.csv")
 
-  for (i in c("Area","Production","Yield")) calcOutput("Foodcrop",
+  for (i in c("Area","Production")) calcOutput("IndiaFoodcrop",
+                                                       subtype = i, 
+                                                       aggregate = "Zonal.Council",
+                                                       file = paste0(i,"ZonalCouncil",".mz"))
+
+  for (i in c("Area","Production")) calcOutput("IndiaFoodcrop",
                                                        subtype = i, 
                                                        aggregate = "Country",
-                                                       file = paste0(i,".mz"))
+                                                       file = paste0(i,"Country",".mz"))
   
   
 }
