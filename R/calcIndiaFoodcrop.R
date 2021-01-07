@@ -18,11 +18,16 @@ calcIndiaFoodcrop <- function(subtype="Area"){
     weight <- x[,,"Area"]
     x <- setNames(collapseNames(1000*x[,,"Production"]/x[,,"Area"],preservedim = c(2,3)),sub("Area","Yield",getNames(x[,,"Area"])))
     getNames(x) <- sub("kHectares","Kg/Hectare",getNames(x))
+    weight[is.na(weight)]<-0
   }
-
+  x[is.na(x)]<-0
+  
+  
   return(list(x=x[,,subtype],
               weight=weight,
               mixed_aggregation = TRUE,
+              min=0,
+              max=999999,
               unit=getNames(x,fulldim = TRUE)$unit[which(getNames(x,fulldim = TRUE)$variable==subtype)],
               isocountries = FALSE,
               description=paste0("IndiaAPY Foodcrop ",subtype," data from: https://eands.dacnet.nic.in/APY_96_To_07.htm")))
