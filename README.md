@@ -1,6 +1,6 @@
 # FABLE project data
 
-R package **mrfable**, version **1.4.3**
+R package **mrfable**, version **1.5.0**
 
 [![CRAN status](https://www.r-pkg.org/badges/version/mrfable)](https://cran.r-project.org/package=mrfable)    
 
@@ -30,6 +30,14 @@ Package updates can be installed using `update.packages` (make sure that the add
 update.packages()
 ```
 
+## Tutorial
+
+The package comes with a vignette describing the basic functionality of the package and how to use it. You can load it with the following command (the package needs to be installed):
+
+```r
+vignette("mrfable") # India foodcrop data preparation with R
+```
+
 ## Questions / Problems
 
 In case of questions / problems please contact Anastasis Giannousakis <giannou@pik-potsdam.de>.
@@ -38,7 +46,7 @@ In case of questions / problems please contact Anastasis Giannousakis <giannou@p
 
 To cite package **mrfable** in publications use:
 
-Giannousakis A (2021). _mrfable: FABLE project data_. R package version 1.4.3.
+Giannousakis A (2021). _mrfable: FABLE project data_. R package version 1.5.0.
 
 A BibTeX entry for LaTeX users is
 
@@ -47,7 +55,7 @@ A BibTeX entry for LaTeX users is
   title = {mrfable: FABLE project data},
   author = {Anastasis Giannousakis},
   year = {2021},
-  note = {R package version 1.4.3},
+  note = {R package version 1.5.0},
 }
 ```
 

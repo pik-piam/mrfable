@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Anastasis Giannousakis" />
+
+<meta name="date" content="2021-01-11" />
+
+<title>India foodcrop data preparation with R</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">India foodcrop data preparation with R</h1>
+<h4 class="author">Anastasis Giannousakis</h4>
+<h4 class="date">2021-01-11</h4>
+
+
+
+<p>The mrfable R package gives you quick, easy, and handy access to a large amount of foodrcrop data (area, production, and yield) for the federal States of India from 1967 until now. With mrfbale you can automatically download the data from <a href="https://eands.dacnet.nic.in/" class="uri">https://eands.dacnet.nic.in/</a>, and correct, clean, and aggregate them. This document provides a quick guide for using the package.</p>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>mrfable is based on the MADRaT engine (for more information run <code>vignettes(&quot;madrat&quot;)</code>. To load mrfable simply type (the typical output is shown under some commands as comment):</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(mrfable)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">#Loading required package: madrat</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">#Configuration update:</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">#  extramappings:  -&gt; mappingIndiaAPY.csv</span></span></code></pre></div>
+<p>The package is ready to use.</p>
+</div>
+<div id="data-for-all-india" class="section level2">
+<h2>Data for all India</h2>
+<p>To compute the total foodcrop data for all India simply type (for e.g. area data):</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>mydata &lt;-<span class="st"> </span><span class="kw">calcOutput</span>(<span class="st">&quot;IndiaFoodcrop&quot;</span>,<span class="dt">subtype=</span><span class="st">&quot;Area&quot;</span>)</span></code></pre></div>
+<p>for yield/production data use:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>mydata_y &lt;-<span class="st"> </span><span class="kw">calcOutput</span>(<span class="st">&quot;IndiaFoodcrop&quot;</span>,<span class="dt">subtype=</span><span class="st">&quot;Yield&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>mydata_p &lt;-<span class="st"> </span><span class="kw">calcOutput</span>(<span class="st">&quot;IndiaFoodcrop&quot;</span>,<span class="dt">subtype=</span><span class="st">&quot;Production&quot;</span>)</span></code></pre></div>
+<p>This will download, clean, sort, and aggregate the data automatically (access to the individual steps will be shown further down). The object <code>mydata</code> will contain your data. It is an object of the <code>magpie</code> class, i.e. an array:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">str</span>(mydata)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># Formal class &#39;magpie&#39; [package &quot;magclass&quot;] with 1 slot</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#   ..@ .Data: num [1, 1:53, 1:40] 12240 12807 12052 12493 12913 ...</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#   .. ..- attr(*, &quot;dimnames&quot;)=List of 3</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#   .. .. ..$ state                    : chr &quot;IND&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#   .. .. ..$ year                     : chr [1:53] &quot;y1966&quot; &quot;y1967&quot; &quot;y1968&quot; &quot;y1969&quot; ...</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#   .. .. ..$ crop.variable.unit.season: chr [1:40] &quot;Bajra.Area.kHectares.total&quot; &quot;Barley.Area.kHectares.total&quot; &quot;Gram.Area.kHectares.total&quot; &quot;Jowar.Area.kHectares.total&quot; ...</span></span></code></pre></div>
+<p>The dimensions of the object are the spatial, temporal and data dimension. To access any of the dimensions follow this scheme: <code>mydata[&quot;spatial&quot;,&quot;temporal&quot;,&quot;data&quot;]</code>, e.g.:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>mydata[<span class="st">&quot;IND&quot;</span>,<span class="dv">2018</span>,<span class="st">&quot;Rice.Area.kHectares.total&quot;</span>]</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co">#An object of class &quot;magpie&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">#, , crop.variable.unit.season = Rice.Area.kHectares.total</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">#</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#     year</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#state    y2018</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#  IND 44156.45</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#...</span></span></code></pre></div>
+<p>This is not so spectacular, however. Let’s see how we can see more. (Note that you don’t have to type the unit each time, and you can choose more than one seasons/years):</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>mydata[<span class="st">&quot;IND&quot;</span>,<span class="dv">2000</span><span class="op">:</span><span class="dv">2018</span>,<span class="st">&quot;Rice&quot;</span>][,,<span class="kw">c</span>(<span class="st">&quot;kharif&quot;</span>,<span class="st">&quot;rabi&quot;</span>)]</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co"># An object of class &quot;magpie&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co"># , , crop.variable.unit.season = Rice.Area.kHectares.kharif</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co"># </span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co">#      year</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co"># state   y2000   y2001 y2002   y2003 y2004   y2005   y2006 y2007   y2008    y2009    y2010    y2011   y2012    y2013 y2014    y2015    y2016    y2017    y2018</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#   IND 22672.8 22255.4 20522 21699.7 21187 21790.9 22199.7 21978 22938.9 20979.07 22724.91 23113.69 22488.8 23029.17 39829 39656.45 39845.77 39349.27 39964.35</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co"># </span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co"># , , crop.variable.unit.season = Rice.Area.kHectares.rabi</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co"># </span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#      year</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co"># state  y2000  y2001 y2002 y2003 y2004  y2005  y2006  y2007  y2008  y2009    y2010  y2011    y2012    y2013   y2014    y2015    y2016    y2017    y2018</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#   IND 1336.8 1502.1 812.2 975.7 982.8 1569.4 1468.5 1524.7 1688.9 1478.1 1939.762 1321.6 1352.174 2037.124 4281.56 3842.727 4147.582 4424.799 4192.091</span></span></code></pre></div>
+</div>
+<div id="data-for-individual-states" class="section level2">
+<h2>Data for individual states</h2>
+<p>To compute the total foodcrop data for all India states simply type (for e.g. area data):</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>mydata &lt;-<span class="st"> </span><span class="kw">calcOutput</span>(<span class="st">&quot;IndiaFoodcrop&quot;</span>,<span class="dt">subtype=</span><span class="st">&quot;Area&quot;</span>, <span class="dt">aggregate =</span> <span class="st">&quot;state&quot;</span>)</span></code></pre></div>
+<p>Again, to access the data you can filter them like this (a blank field means “show all data”):</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>mydata[,<span class="dv">2000</span><span class="op">:</span><span class="dv">2018</span>,<span class="st">&quot;Rice&quot;</span>][,,<span class="kw">c</span>(<span class="st">&quot;kharif&quot;</span>,<span class="st">&quot;rabi&quot;</span>)]</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co"># An object of class &quot;magpie&quot;</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co"># , , crop.variable.unit.season = Rice.Area.kHectares.kharif</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co"># </span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#                                           year</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co"># state                                       y2000  y2001  y2002  y2003  y2004  y2005  y2006  y2007  y2008    y2009    y2010    y2011    y2012    y2013   y2014     y2015</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#   Andaman and Nicobar Islands                10.9    9.8   10.9   10.6   10.7   10.6   10.6    7.3    7.9    8.140    8.390    8.100    7.850    8.005    6.43    6.1000</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#   Andhra Pradesh                           3004.0 2426.1 2109.3 2109.0 2215.0 2526.0 2641.0 2578.0 2803.0 2063.000 2922.000 2874.000 2487.000 2651.000 1635.00 1399.0000</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#   Arunachal Pradesh                         118.6  119.5  124.6  119.2  121.6  122.3  122.3  124.0  126.8  121.468  121.570  123.500  126.085  131.990  127.20  128.3000</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="co">#   Assam                                       0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.000    0.000    0.000    0.000    0.000 2078.94 2080.0050</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co">#   Bihar                                       0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.000    0.000    0.000    0.000    0.000 3181.11 3151.0120</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co">#   Chhattisgarh                             3769.7 3810.1 3777.7 3829.0 3746.7 3747.2 3723.6 3752.4 3734.0 3670.700 3702.500 3773.800 3784.800 3802.100 3808.50 3816.0000</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="co">#   Dadra and Nagar Haveli and Daman and Diu   15.6   15.3   15.3   15.3   15.2   15.4   15.4   15.6   15.4   14.545   12.800   12.320   15.850   15.260   15.38   17.5333</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="co">#   Delhi                                       6.1    6.4    6.1    6.5    6.0    7.5    7.4    7.4    7.4    6.821    7.045    6.850    6.700    6.040    6.04    6.0350</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="co">#   Goa                                         0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.000    0.000    0.000    0.000    0.000   27.84   27.7300</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co">#   Gujarat                                   583.6  667.9  468.9  651.4  661.7  666.0  693.0  726.0  722.0  658.000  728.000  752.000  672.000  757.000  755.00  741.0000</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="co">#   Haryana                                  1054.0 1028.0  906.0 1015.0 1028.0 1052.0 1041.0 1075.0 1210.0 1205.000 1245.000 1235.000 1215.000 1228.000 1287.00 1354.0000</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">#   Himachal Pradesh                           81.5   80.6   83.3   81.3   81.0   79.4   79.2   78.6   77.7   76.696   77.064   77.230   76.900   74.360   72.47   73.6850</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="co">#   Jammu &amp; Kashmir                           244.1  249.8  236.2  259.8  250.0  259.0  252.5  263.2  257.6  259.892  261.347  262.169  261.660  271.490  276.42  304.5000</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a><span class="co">#   Jharkhand                                   0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.000    0.000    0.000    0.000    0.000 1502.20 1588.9790</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="co">#   Karnataka                                1120.5 1088.0 1030.5  944.3 1056.0 1076.0 1066.0 1051.0 1130.0 1102.000 1130.000 1118.000 1048.000 1035.000 1000.00  977.0000</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="co">#   Kerala                                      0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.000    0.000    0.000    0.000    0.000  152.97  150.7663</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="co">#   Madhya Pradesh                           1707.6 1776.4 1681.3 1718.8 1622.5 1657.7 1661.3 1558.9 1682.3 1445.700 1602.900 1662.000 1882.600 1930.000 2153.00 2024.0000</span></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="co">#   Maharashtra                              1486.4 1487.2 1497.0 1500.0 1488.0 1474.0 1491.0 1535.0 1500.0 1450.000 1486.000 1516.000 1528.000 1568.000 1508.00 1471.0000</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="co">#...</span></span></code></pre></div>
+</div>
+<div id="output-to-files" class="section level2">
+<h2>Output to file(s)</h2>
+<p>By use of typical functions (see e.g. <code>magclass::as.data.frame</code>) you can transform the cleaned data to other data types (e.g. data frames etc.) and/or write them in files:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">write.magpie</span>(mydata,<span class="dt">file_name =</span> <span class="st">&quot;mydata.csv&quot;</span>)</span></code></pre></div>
+<p>(see <code>magclass::write.magpie</code> for more data types).</p>
+<p>You can also extract the whole cleaned dataset for use in projects (e.g. for use as input for a model) like this:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">retrieveData</span>(<span class="st">&quot;DATAINDIA&quot;</span>)</span></code></pre></div>
+<p>The data will be then found in your madrat output folder, which you can find with the following command:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">getConfig</span>(<span class="st">&quot;outputfolder&quot;</span>)</span></code></pre></div>
+</div>
+<div id="advanced" class="section level2">
+<h2>Advanced</h2>
+<p>The individual steps of data creation will be listed here:</p>
+<div id="download-the-data" class="section level3">
+<h3>Download the data</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">downloadSource</span>(<span class="st">&quot;IndiaAPY&quot;</span>)</span></code></pre></div>
+</div>
+<div id="read-in-the-raw-data" class="section level3">
+<h3>Read in the raw data</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>mydata &lt;-<span class="st"> </span><span class="kw">readSource</span>(<span class="st">&quot;IndiaAPY&quot;</span>,<span class="dt">convert =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+</div>
+<div id="read-in-the-raw-data-and-correct-mistakes.-deliver-the-data-for-the-official-current-list-of-federal-states-of-india" class="section level3">
+<h3>Read in the raw data and correct mistakes. Deliver the data for the official current list of federal states of India</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>mydata &lt;-<span class="st"> </span><span class="kw">readSource</span>(<span class="st">&quot;IndiaAPY&quot;</span>,<span class="dt">convert =</span> <span class="st">&quot;onlycorrect&quot;</span>)</span></code></pre></div>
+</div>
+<div id="calculate-data-for-area-production-or-yield-andor-aggregate-to-a-different-spatial-resolution" class="section level3">
+<h3>Calculate data for area, production or yield and/or aggregate to a different spatial resolution</h3>
+<p>(see above: <code>calcOutput</code>…)</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
