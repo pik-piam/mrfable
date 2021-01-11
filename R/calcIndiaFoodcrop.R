@@ -11,11 +11,14 @@
 
 calcIndiaFoodcrop <- function(subtype="Area"){
   
+  if (!subtype%in%c("Area","Yield","Production")) stop("choose a valid subtype")
   x <- readSource("IndiaAPY", convert = "onlycorrect")
 
   weight <- NULL
   if (subtype=="Yield") {
     weight <- x[,,"Area"]
+    x[,,"Production"][x[,,"Area"]==0] <- 0 
+    x[,,"Area"][x[,,"Area"]==0] <- 10^-10 
     x <- setNames(collapseNames(1000*x[,,"Production"]/x[,,"Area"],preservedim = c(2,3)),sub("Area","Yield",getNames(x[,,"Area"])))
     getNames(x) <- sub("kHectares","Kg/Hectare",getNames(x))
     weight[is.na(weight)]<-0
