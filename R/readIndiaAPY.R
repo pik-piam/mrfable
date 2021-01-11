@@ -94,8 +94,7 @@ readIndiaAPY <- function(subtype=NA){
   if (file.exists("crops.txt")) {
     crops <- readLines("crops.txt")
   } else {
-    downloadSource("IndiaAPY" , overwrite = TRUE)
-    crops <- readLines("crops.txt")
+    stop("please download the data with madrat::downloadSource first")
   }  
   excelfiles <- dir()[grep("xls", dir())] # read-in only excel files
   out <- NULL
