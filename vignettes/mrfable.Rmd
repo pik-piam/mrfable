@@ -13,10 +13,7 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-The mrfable R package gives you quick, easy, and handy access to a large amount of foodrcrop data (area, production, and yield) for the federal States of India from 1967 until now. With mrfbale you can automatically download the data from https://eands.dacnet.nic.in/, and correct, clean, and aggregate them. This document provides a quick guide for using the package. 
-
-
-
+The mrfable R package gives you quick, easy, and handy access to a large amount of foodrcrop data (area, production, and yield) for the federal States of India in the period 1967-2018. With mrfbale you can automatically download the data from https://eands.dacnet.nic.in/, and correct, clean, and aggregate them. This document provides a quick guide for using the package. 
 
 ## Setup
 
@@ -24,9 +21,14 @@ mrfable is based on the MADRaT engine (for more information run `vignettes("madr
 
 ```{r, echo = TRUE, eval=FALSE}
 library(mrfable)
-#Loading required package: madrat
-#Configuration update:
-#  extramappings:  -> mappingIndiaAPY.csv
+# Loading required package: madrat
+# Loading required package: magclass
+# 
+# Attaching package: ‘magclass’
+# 
+# The following object is masked from ‘package:grid’:
+# 
+#     getNames
 ```
 
 The package is ready to use. 
@@ -117,6 +119,14 @@ mydata[,2000:2018,"Rice"][,,c("kharif","rabi")]
 #...
 ```
 
+## Data for India Zonal Councils
+
+To compute the total foodcrop data for all Zonal Councils of India states type (for e.g. area data):
+```{r, echo = TRUE, eval=FALSE}
+mydata <- calcOutput("IndiaFoodcrop",subtype="Area", aggregate = "Zonal.Council")
+```
+And access the data same as above.
+
 ## Output to file(s)
 
 By use of typical functions (see e.g. `magclass::as.data.frame`) you can transform the cleaned data to other data types (e.g. data frames etc.) and/or write them in files:
@@ -129,29 +139,4 @@ You can also extract the whole cleaned dataset for use in projects (e.g. for use
 ```{r,echo=TRUE,eval=FALSE}
 retrieveData("DATAINDIA")
 ```
-The data will be then found in your madrat output folder, which you can find with the following command:
-```{r,echo=TRUE,eval=FALSE}
-getConfig("outputfolder")
-```
-## Advanced
-
-The individual steps of data creation will be listed here:
-
-### Download the data
-```{r,echo=TRUE,eval=FALSE}
-downloadSource("IndiaAPY")
-```
-
-### Read in the raw data
-```{r,echo=TRUE,eval=FALSE}
-mydata <- readSource("IndiaAPY",convert = FALSE)
-```
-
-### Read in the raw data and correct mistakes. Deliver the data for the official current list of federal states of India
-```{r,echo=TRUE,eval=FALSE}
-mydata <- readSource("IndiaAPY",convert = "onlycorrect")
-```
-
-### Calculate data for area, production or yield and/or aggregate to a different spatial resolution
-(see above: `calcOutput`...)
-
+The location of the data on your machine will be reported in the command output as `outputfolder:`
