@@ -2,7 +2,8 @@
 
 .onLoad <- function(libname, pkgname){
   madrat::setConfig(packages=c(madrat::getConfig("packages"),pkgname), .cfgchecks=FALSE, .verbose=FALSE)
-  if (any(grepl("mappingIndiaAPY.csv",madrat::getConfig("extramappings")))) madrat::setConfig(extramappings = c(madrat::getConfig("extramappings"),"mappingIndiaAPY.csv"))
+  if (!any(grepl("mappingIndiaAPY.csv",madrat::getConfig("extramappings"))))
+    madrat::setConfig(extramappings = c(madrat::getConfig("extramappings"),"mappingIndiaAPY.csv"),.cfgchecks=FALSE, .verbose=FALSE)
 }
 
 #create an own warning function which redirects calls to vcat (package internal)
