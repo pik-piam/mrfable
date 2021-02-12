@@ -139,4 +139,4 @@ You can also extract the whole cleaned dataset for use in projects (e.g. for use
 ```{r,echo=TRUE,eval=FALSE}
 retrieveData("DATAINDIA")
 ```
-The location of the data on your machine will be reported in the command output as `outputfolder:`
+The location of the data on your machine will be reported in the command output as `outputfolder`
