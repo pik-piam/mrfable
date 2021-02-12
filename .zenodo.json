@@ -1,7 +1,7 @@
 {
   "title": "mrfable: FABLE project data",
-  "version": "1.5.2",
-  "description": "<p>Provides functions to read in FABLE project data.<\/p>",
+  "version": "1.5.3",
+  "description": "<p>Tool for easy downloading, cleaning, and sorting foodcrop data for India taken from here: https://eands.dacnet.nic.in/APY_96_To_07.htm .<\/p>",
   "creators": [
     {
       "name": "Giannousakis, Anastasis"

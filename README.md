@@ -1,12 +1,12 @@
 # FABLE project data
 
-R package **mrfable**, version **1.5.2**
+R package **mrfable**, version **1.5.3**
 
 [![CRAN status](https://www.r-pkg.org/badges/version/mrfable)](https://cran.r-project.org/package=mrfable)    
 
 ## Purpose and Functionality
 
-Provides functions to read in FABLE project data.
+Tool for easy downloading, cleaning, and sorting foodcrop data for India taken from here: https://eands.dacnet.nic.in/APY_96_To_07.htm .
 
 
 ## Installation
@@ -46,7 +46,7 @@ In case of questions / problems please contact Anastasis Giannousakis <giannou@p
 
 To cite package **mrfable** in publications use:
 
-Giannousakis A (2021). _mrfable: FABLE project data_. R package version 1.5.2.
+Giannousakis A (2021). _mrfable: FABLE project data_. R package version 1.5.3.
 
 A BibTeX entry for LaTeX users is
 
@@ -55,7 +55,7 @@ A BibTeX entry for LaTeX users is
   title = {mrfable: FABLE project data},
   author = {Anastasis Giannousakis},
   year = {2021},
-  note = {R package version 1.5.2},
+  note = {R package version 1.5.3},
 }
 ```
 
