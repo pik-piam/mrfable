@@ -11,7 +11,7 @@
 
 downloadIndiaAPY <- function() {
 
-  durl <- "https://eands.dacnet.nic.in/"
+  durl <- "http://eands.dacnet.nic.in/"
   years <- c("APY_state_data/Apy-1966-76/Foodgrains/","Archive/Year76-86/","10-Year-1985-96/")
   b<-suppressWarnings(readLines("http://eands.dacnet.nic.in/StateData_66-76Year.htm"))
   crops <- gsub("\\..*.","",gsub(".*.Foodgrains/","",grep("APY.*.Food.*.xls",b,value=TRUE))) # extract filenames
