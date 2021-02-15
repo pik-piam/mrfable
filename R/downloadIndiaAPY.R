@@ -19,12 +19,16 @@ downloadIndiaAPY <- function() {
   for (i in crops) {
     for (j in years) {
       for (k in c(".xls", ".xlsx")) {
-        suppressWarnings(try(download.file(paste0(durl, j, i, k), destfile = paste0(gsub("/|[a-z,A-Z]", "", j), i, k)),silent = T))
+        if (Sys.info()[["sysname"]]=="Windows") {
+          suppressWarnings(try(download.file(paste0(durl, j, i, k),mode = "wb", destfile = paste0(gsub("/|[a-z,A-Z]", "", j), i, k)),silent = T))
+        } else {
+          suppressWarnings(try(download.file(paste0(durl, j, i, k), destfile = paste0(gsub("/|[a-z,A-Z]", "", j), i, k)),silent = T))
+        }
       }
     }
   }
-  suppressWarnings(try(download.file("http://eands.dacnet.nic.in/PDF/foodgrain-5_years.xls",destfile = "allfood1996-2013.xls")))
-  suppressWarnings(try(download.file("http://eands.dacnet.nic.in/PDF/5-Year%20Foodgrain%202018-19.xls",destfile = "allfood2014-2018.xls")))
+  suppressWarnings(try(download.file("http://eands.dacnet.nic.in/PDF/foodgrain-5_years.xls",mode = "wb",destfile = "allfood1996-2013.xls")))
+  suppressWarnings(try(download.file("http://eands.dacnet.nic.in/PDF/5-Year%20Foodgrain%202018-19.xls",mode = "wb",destfile = "allfood2014-2018.xls")))
   writeLines(crops,con = "crops.txt")
   meta <- list(url=durl,
                title="Data on Area, Production and Yield of Major Crops")
