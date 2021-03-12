@@ -1,8 +1,8 @@
 # FABLE project data
 
-R package **mrfable**, version **1.5.5**
+R package **mrfable**, version **1.5.6**
 
-[![CRAN status](https://www.r-pkg.org/badges/version/mrfable)](https://cran.r-project.org/package=mrfable)    
+[![CRAN status](https://www.r-pkg.org/badges/version/mrfable)](https://cran.r-project.org/package=mrfable)   [![R build status](https://github.com/pik-piam/mrfable/workflows/check/badge.svg)](https://github.com/pik-piam/mrfable/actions) [![codecov](https://codecov.io/gh/pik-piam/mrfable/branch/master/graph/badge.svg)](https://codecov.io/gh/pik-piam/mrfable)
 
 ## Purpose and Functionality
 
@@ -46,7 +46,7 @@ In case of questions / problems please contact Anastasis Giannousakis <giannou@p
 
 To cite package **mrfable** in publications use:
 
-Giannousakis A (2021). _mrfable: FABLE project data_. R package version 1.5.5.
+Giannousakis A (2021). _mrfable: FABLE project data_. R package version 1.5.6.
 
 A BibTeX entry for LaTeX users is
 
@@ -55,7 +55,7 @@ A BibTeX entry for LaTeX users is
   title = {mrfable: FABLE project data},
   author = {Anastasis Giannousakis},
   year = {2021},
-  note = {R package version 1.5.5},
+  note = {R package version 1.5.6},
 }
 ```
 

@@ -11,6 +11,9 @@
 
 calcIndiaFoodcrop <- function(subtype="Area"){
   
+  if (!any(grepl("mappingIndiaAPY.csv", getConfig("extramappings"))))
+    setConfig(extramappings = c(getConfig("extramappings"),"mappingIndiaAPY.csv"), .cfgchecks = FALSE, .verbose = FALSE)
+  
   if (!subtype%in%c("Area","Yield","Production")) stop("choose a valid subtype")
   x <- readSource("IndiaAPY", convert = "onlycorrect")
 

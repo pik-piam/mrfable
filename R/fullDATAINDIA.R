@@ -9,7 +9,8 @@
 
 fullDATAINDIA <- function(){
   
-  setConfig(extramappings = "mappingIndiaAPY.csv")
+  if (!any(grepl("mappingIndiaAPY.csv", getConfig("extramappings"))))
+    setConfig(extramappings = c(getConfig("extramappings"),"mappingIndiaAPY.csv"), .cfgchecks = FALSE, .verbose = FALSE)
 
   for (i in c("Area","Production","Yield")) calcOutput("IndiaFoodcrop",
                                                        subtype = i, 
