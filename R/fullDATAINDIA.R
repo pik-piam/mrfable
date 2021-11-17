@@ -1,26 +1,25 @@
 #' @title fullDATAINDIA
 #' Calculates foodcrops data for India taken from here: https://eands.dacnet.nic.in/APY_96_To_07.htm
 #' @author Anastasis Giannousakis
-#' @importFrom madrat calcOutput setConfig getConfig
+#' @importFrom madrat calcOutput
 #' @examples
-#' \dontrun{ a <- retrieveData("DATAINDIA") }
-#' @return Foodcrop India data 
+#' \dontrun{
+#' a <- retrieveData("DATAINDIA")
+#' }
+#' @return Foodcrop India data
 
 
-fullDATAINDIA <- function(){
-  
-  if (!any(grepl("mappingIndiaAPY.csv", getConfig("extramappings"))))
-    setConfig(extramappings = c(getConfig("extramappings"),"mappingIndiaAPY.csv"), .cfgchecks = FALSE, .verbose = FALSE)
+fullDATAINDIA <- function() {
 
-  for (i in c("Area","Production","Yield")) calcOutput("IndiaFoodcrop",
-                                                       subtype = i, 
+  for (i in c("Area", "Production", "Yield")) calcOutput("IndiaFoodcrop",
+                                                       subtype = i,
                                                        aggregate = "Zonal.Council",
-                                                       file = paste0(i,"ZonalCouncil",".mz"))
+                                                       file = paste0(i, "ZonalCouncil", ".mz"))
 
-  for (i in c("Area","Production","Yield")) calcOutput("IndiaFoodcrop",
-                                                       subtype = i, 
+  for (i in c("Area", "Production", "Yield")) calcOutput("IndiaFoodcrop",
+                                                       subtype = i,
                                                        aggregate = "Country",
-                                                       file = paste0(i,"Country",".mz"))
-  
-  
+                                                       file = paste0(i, "Country", ".mz"))
+
+
 }
