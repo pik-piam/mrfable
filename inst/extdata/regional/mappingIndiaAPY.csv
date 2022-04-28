@@ -1,37 +1,37 @@
 state,Country,Region,Zonal Council
-Andaman and Nicobar Islands,IND,IND,SZC
-Andhra Pradesh,IND,IND,SZC
-Arunachal Pradesh,IND,IND,NEC
-Assam,IND,IND,NEC
-Bihar,IND,IND,EZC
-Chhattisgarh,IND,IND,CZC
-Dadra and Nagar Haveli and Daman and Diu,IND,IND,WZC
-Delhi,IND,IND,NZC
-Goa,IND,IND,WZC
-Gujarat,IND,IND,WZC
-Haryana,IND,IND,NZC
-Himachal Pradesh,IND,IND,NZC
-Jammu & Kashmir,IND,IND,NZC
-Jharkhand,IND,IND,EZC
-Karnataka,IND,IND,SZC
-Kerala,IND,IND,SZC
-Madhya Pradesh,IND,IND,CZC
-Maharashtra,IND,IND,WZC
-Manipur,IND,IND,NEC
-Meghalaya,IND,IND,NEC
-Mizoram,IND,IND,NEC
-Nagaland,IND,IND,NEC
-Odisha,IND,IND,EZC
-Puducherry,IND,IND,SZC
-Punjab,IND,IND,NZC
-Rajasthan,IND,IND,NZC
-Sikkim,IND,IND,NEC
-Tamil Nadu,IND,IND,SZC
-Tripura,IND,IND,NEC
-Uttar Pradesh,IND,IND,NZC
-Uttarakhand,IND,IND,NZC
-West Bengal,IND,IND,EZC
-Chandigarh,IND,IND,NZC
-Telangana,IND,IND,SZC
-Ladakh,IND,IND,NZC
-Lakshadweep,IND,IND,SZC
+Andaman and Nicobar Islands,IND,ANI,SZC
+Andhra Pradesh,IND,ANP,SZC
+Arunachal Pradesh,IND,ARP,NEC
+Assam,IND,ASM,NEC
+Bihar,IND,BIH,EZC
+Chhattisgarh,IND,CHT,CZC
+Dadra and Nagar Haveli and Daman and Diu,IND,DND,WZC
+Delhi,IND,DEL,NZC
+Goa,IND,GOA,WZC
+Gujarat,IND,GUJ,WZC
+Haryana,IND,HAR,NZC
+Himachal Pradesh,IND,HIP,NZC
+Jammu & Kashmir,IND,JNK,NZC
+Jharkhand,IND,JHK,EZC
+Karnataka,IND,KAR,SZC
+Kerala,IND,KER,SZC
+Madhya Pradesh,IND,MDP,CZC
+Maharashtra,IND,MAH,WZC
+Manipur,IND,MAN,NEC
+Meghalaya,IND,MEG,NEC
+Mizoram,IND,MIZ,NEC
+Nagaland,IND,NAG,NEC
+Odisha,IND,ORI,EZC
+Puducherry,IND,PUD,SZC
+Punjab,IND,PUN,NZC
+Rajasthan,IND,RAJ,NZC
+Sikkim,IND,SIK,NEC
+Tamil Nadu,IND,TND,SZC
+Tripura,IND,TRI,NEC
+Uttar Pradesh,IND,UTP,NZC
+Uttarakhand,IND,UTK,NZC
+West Bengal,IND,WEB,EZC
+Chandigarh,IND,CHD,NZC
+Telangana,IND,TEL,SZC
+Ladakh,IND,LAD,NZC
+Lakshadweep,IND,LAK,SZC

@@ -1,8 +1,8 @@
 # FABLE project data
 
-R package **mrfable**, version **1.5.8**
+R package **mrfable**, version **1.6.0**
 
-[![CRAN status](https://www.r-pkg.org/badges/version/mrfable)](https://cran.r-project.org/package=mrfable)  [![R build status](https://github.com/pik-piam/mrfable/workflows/check/badge.svg)](https://github.com/pik-piam/mrfable/actions) [![codecov](https://codecov.io/gh/pik-piam/mrfable/branch/master/graph/badge.svg)](https://codecov.io/gh/pik-piam/mrfable) [![r-universe](https://pik-piam.r-universe.dev/badges/mrfable)](https://pik-piam.r-universe.dev/ui#builds)
+[![CRAN status](https://www.r-pkg.org/badges/version/mrfable)](https://cran.r-project.org/package=mrfable)  [![R build status](https://github.com/PrantikaDas/mrfable/workflows/check/badge.svg)](https://github.com/PrantikaDas/mrfable/actions) [![codecov](https://codecov.io/gh/PrantikaDas/mrfable/branch/master/graph/badge.svg)](https://app.codecov.io/gh/PrantikaDas/mrfable) [![r-universe](https://pik-piam.r-universe.dev/badges/mrfable)](https://pik-piam.r-universe.dev/ui#builds)
 
 ## Purpose and Functionality
 
@@ -46,7 +46,7 @@ In case of questions / problems please contact Anastasis Giannousakis <giannou@p
 
 To cite package **mrfable** in publications use:
 
-Giannousakis A (2021). _mrfable: FABLE project data_. R package version 1.5.8.
+Giannousakis A (2022). _mrfable: FABLE project data_. R package version 1.6.0.
 
 A BibTeX entry for LaTeX users is
 
@@ -54,7 +54,7 @@ A BibTeX entry for LaTeX users is
 @Manual{,
   title = {mrfable: FABLE project data},
   author = {Anastasis Giannousakis},
-  year = {2021},
-  note = {R package version 1.5.8},
+  year = {2022},
+  note = {R package version 1.6.0},
 }
 ```

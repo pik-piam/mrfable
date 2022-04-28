@@ -1,8 +1,8 @@
 Package: mrfable
 Type: Package
 Title: FABLE project data
-Version: 1.5.8
-Date: 2021-11-17
+Version: 1.6.0
+Date: 2022-04-28
 Authors@R: c(person("Anastasis", "Giannousakis", email = "giannou@pik-potsdam.de", role = c("aut","cre")))
 Description: Tool for easy downloading, cleaning, and sorting foodcrop data for India taken from here: https://eands.dacnet.nic.in/APY_96_To_07.htm .
 Depends:
