@@ -1,6 +1,6 @@
 {
   "title": "mrfable: FABLE project data",
-  "version": "1.5.8",
+  "version": "1.6.0",
   "description": "<p>Tool for easy downloading, cleaning, and sorting foodcrop data for India taken from here: https://eands.dacnet.nic.in/APY_96_To_07.htm .<\/p>",
   "creators": [
     {
