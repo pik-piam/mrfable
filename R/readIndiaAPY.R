@@ -9,17 +9,17 @@
 #' @importFrom madrat downloadSource
 #' @examples
 #' \dontrun{ a <- madrat::readSource(type="IndiaAPY",subtype="Rice",convert="onlycorrect") }
-#' @return magpie object containing Area, Yield, and Production data. 
+#' @return magpie object containing Area, Yield, and Production data.
 
 
 readIndiaAPY <- function(subtype=NA){
-  
+
   # helper function to convert data from wide to long format and specify variable and unit
   .gather <- function(x, varunit, season=FALSE){
     fct<- 1
     if(season) fct<-2
     d <- gather(x, "year", "value", colnames(x)[-(1:fct)], factor_key = TRUE) # convert to long format
-#    d <- d[-c(grep("State", d[,1]), which(is.na(d[,1]))),] # remove irrelevant rows 
+#    d <- d[-c(grep("State", d[,1]), which(is.na(d[, 1]))), ] # remove irrelevant rows
     varname <- strsplit(varunit, " \\(")[[1]][[1]] # split variable-unit
     unit <- gsub(" |\\)|\\'", "", strsplit(varunit, " \\(")[[1]][[2]])
     unit <- sub("000", "k", unit)
@@ -27,7 +27,7 @@ readIndiaAPY <- function(subtype=NA){
     if (season) out <- cbind("variable"=varname, "unit"=unit, d)
     return(out)
   }
-  
+
   # helper function to prepare data from excel files for conversion to data.frame
   .fixdata <- function(a){
     # are the data of type R (with seasons in the 2nd column) or type W (without)?
@@ -36,7 +36,7 @@ readIndiaAPY <- function(subtype=NA){
     } else {
       type1 <- "W"
     }
-    
+
     if (type1 == "W") {
       if (any(grepl("Kharif|Winter|Autumn|Rabi|Summer",names(a)))) {
         season<-tolower(strsplit(
@@ -79,7 +79,7 @@ readIndiaAPY <- function(subtype=NA){
         .gather(cbind(a[-1,1:2], a[-1,(3+1*ind):(2+2*ind)]), "Production ( 000 Tonnes)", TRUE)
       )
     } else {
-        out <- rbind(  
+        out <- rbind(
           .gather(cbind(a[-1,1], a[-1,(2+0*ind):(1+1*ind)]), "Area ( 000 Hektares)"),
           .gather(cbind(a[-1,1], a[-1,(2+1*ind):(1+2*ind)]), "Production ( 000 Tonnes)")
         )
@@ -88,17 +88,17 @@ readIndiaAPY <- function(subtype=NA){
     return(out)
 
   }
-  
+
 
   crop <- NULL
   if (file.exists("crops.txt")) {
     crops <- readLines("crops.txt")
   } else {
     stop("please download the data with madrat::downloadSource first")
-  }  
+  }
   excelfiles <- dir()[grep("xls", dir())] # read-in only excel files
   out <- NULL
-  
+
   for (i in crops) {
     for (j in grep(i, excelfiles, value = TRUE)) {
       suppressMessages(a <- read_excel(j))
@@ -106,7 +106,7 @@ readIndiaAPY <- function(subtype=NA){
       out <- rbind(out, tmp)
     }
   }
-  
+
   dtfile <- "allfood1996-2013.xls"
   if (!file.exists(dtfile)) downloadSource("IndiaAPY" , overwrite = TRUE)
   for (i in crops) {
@@ -122,16 +122,16 @@ readIndiaAPY <- function(subtype=NA){
     out <- rbind(out, cbind("crop" = i, .fixdata(a)))
   }
   out <- as.data.frame(out)
-  
+
 
   # Convert data column to numeric
   suppressWarnings(out[["value"]] <- as.numeric(out[["value"]]))
 
   # If applicable, filter out specific crops
   if (!is.na(subtype)) out <- filter(out,`crop`==subtype)
-  
+
   out <- as.magpie(out, spatial="state")
-  
+
 
   return(out)
 
