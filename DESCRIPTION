@@ -13,7 +13,6 @@ Imports:
     tidyr,
     readxl,
     magclass,
-    quitte,
     utils
 License: LGPL-3 | file LICENSE
 LazyData: yes
