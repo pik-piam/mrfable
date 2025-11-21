@@ -1,22 +1,24 @@
 Type: Package
 Package: mrfable
 Title: FABLE project data
-Version: 1.7.1
-Date: 2025-09-02
-Authors@R: 
-    person("Ankit", "Saha", , "ankitsa@pik-potsdam.de", role = c("aut", "cre"))
+Version: 1.7.2
+Date: 2025-11-21
+Authors@R: c(
+    person("Ankit", "Saha", , "ankitsa@pik-potsdam.de", role = c("aut", "cre")),
+    person("Anastasis", "Giannousakis", , "giannou@pik-potsdam.de", role = "aut")
+  )
 Description: Tool for easy downloading, cleaning, and sorting foodcrop
-    Data downloaded from UPAg - Unified Portal for Agricultural Statistics by Department of Agriculture & Farmers Welfare. 
-    https://upag.gov.in/dash-reports/stateprofile?rtab=State+Profile%3A+Crop-wise+APY&rtype=reports .
+    Data downloaded from UPAg - Unified Portal for Agricultural Statistics
+    by Department of Agriculture & Farmers Welfare.
 License: LGPL-3 | file LICENSE
 Depends:
-    R (>= 2.10.0),
-    madrat (>= 2.5.0)
+    madrat (>= 2.5.0),
+    R (>= 2.10.0)
 Imports:
     dplyr,
     magclass,
-    readxl,
     readr,
+    readxl,
     tidyr,
     utils
 Suggests: 
@@ -27,4 +29,4 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 LazyData: yes
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

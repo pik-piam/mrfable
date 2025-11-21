@@ -2,15 +2,17 @@ cff-version: 1.2.0
 message: If you use this software, please cite it using the metadata from this file.
 type: software
 title: 'mrfable: FABLE project data'
-version: 1.7.1
-date-released: '2025-09-02'
+version: 1.7.2
+date-released: '2025-11-21'
 abstract: Tool for easy downloading, cleaning, and sorting foodcrop Data downloaded
   from UPAg - Unified Portal for Agricultural Statistics by Department of Agriculture
-  & Farmers Welfare. https://upag.gov.in/dash-reports/stateprofile?rtab=State+Profile%3A+Crop-wise+APY&rtype=reports
-  .
+  & Farmers Welfare.
 authors:
 - family-names: Saha
   given-names: Ankit
   email: ankitsa@pik-potsdam.de
+- family-names: Giannousakis
+  given-names: Anastasis
+  email: giannou@pik-potsdam.de
 license: LGPL-3.0
 

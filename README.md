@@ -1,14 +1,14 @@
 # FABLE project data
 
-R package **mrfable**, version **1.7.1**
+R package **mrfable**, version **1.7.2**
 
-[![CRAN status](https://www.r-pkg.org/badges/version/mrfable)](https://cran.r-project.org/package=mrfable) [![R build status](https://github.com/AnkitSaha07/mrfable/workflows/check/badge.svg)](https://github.com/AnkitSaha07/mrfable/actions) [![codecov](https://codecov.io/gh/AnkitSaha07/mrfable/branch/master/graph/badge.svg)](https://app.codecov.io/gh/AnkitSaha07/mrfable) [![r-universe](https://pik-piam.r-universe.dev/badges/mrfable)](https://pik-piam.r-universe.dev/builds)
+[![CRAN status](https://www.r-pkg.org/badges/version/mrfable)](https://cran.r-project.org/package=mrfable) [![R build status](https://github.com/pik-piam/mrfable/workflows/check/badge.svg)](https://github.com/pik-piam/mrfable/actions) [![codecov](https://codecov.io/gh/pik-piam/mrfable/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/mrfable) [![r-universe](https://pik-piam.r-universe.dev/badges/mrfable)](https://pik-piam.r-universe.dev/builds)
 
 ## Purpose and Functionality
 
 Tool for easy downloading, cleaning, and sorting foodcrop
-    Data downloaded from UPAg - Unified Portal for Agricultural Statistics by Department of Agriculture & Farmers Welfare. 
-    https://upag.gov.in/dash-reports/stateprofile?rtab=State+Profile%3A+Crop-wise+APY&rtype=reports .
+    Data downloaded from UPAg - Unified Portal for Agricultural Statistics
+    by Department of Agriculture & Farmers Welfare.
 
 
 ## Installation
@@ -48,16 +48,16 @@ In case of questions / problems please contact Ankit Saha <ankitsa@pik-potsdam.d
 
 To cite package **mrfable** in publications use:
 
-Saha A (2025). "mrfable: FABLE project data." Version: 1.7.1.
+Saha A, Giannousakis A (2025). "mrfable: FABLE project data." Version: 1.7.2.
 
 A BibTeX entry for LaTeX users is
 
  ```latex
 @Misc{,
   title = {mrfable: FABLE project data},
-  author = {Ankit Saha},
-  date = {2025-09-02},
+  author = {Ankit Saha and Anastasis Giannousakis},
+  date = {2025-11-21},
   year = {2025},
-  note = {Version: 1.7.1},
+  note = {Version: 1.7.2},
 }
 ```
